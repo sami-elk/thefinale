@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
 import csv
-import tkinter as tk
-from tkinter import filedialog
 import matplotlib.pyplot as plt
 import matplotlib
 import seaborn as sns
@@ -29,24 +27,6 @@ def datatype(file):
     ty = file.dtypes
     return ty
 
-
-# ghjkl
-def Fichier_final(file):
-    root = tk.Tk()
-    root.withdraw()
-    root.wm_attributes('-topmost', 1)
-    path = filedialog.askdirectory(master=root) + '/Fichier.csv'
-    with open(path, 'w', newline='') as csvfile:
-        fieldnames = []
-        testhh = {}
-        for i in range(0, len(file.columns)):
-            fieldnames.append(file.columns[i])
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writeheader()
-        for i in range(0, file.shape[0]):
-            for j in range(0, len(file.columns)):
-                testhh[file.columns[j]] = file[file.columns[j]][i]
-            writer.writerow(testhh)
 
 
 # l'appel du fichier html/css
@@ -192,11 +172,7 @@ def main():
                 file = file[~((file < (Q1 - 1.5 * IQR)) | (file > (Q3 + 1.5 * IQR))).any(axis=1)]
                 st.success("Les valeurs aberrantes ont été supprimées correctement")
 
-        if data:
-            st.write("Cliquez pour télécharger votre document après le filtrage")
-            if st.button("télécharger "):
-                Fichier_final(file)
-                st.success("Votre fichier est téléchargé sous le nom 'Fichier.csv'")
+        
     if choix == "Diagramme":
         st.markdown(f"""<p>
                     <img style="float:left; height: 50px;
