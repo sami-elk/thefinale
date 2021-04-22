@@ -1,66 +1,77 @@
 import streamlit as st
-import pandas as pd 
+import pandas as pd
 import csv
-import matplotlib
 import tkinter as tk
 from tkinter import filedialog
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 import matplotlib
-import seaborn as sns #Data Visualization library based on matplotlib
+import seaborn as sns
 import base64
 import codecs
-import streamlit.components.v1 as stc 
+import streamlit.components.v1 as stc
+
 matplotlib.use("Agg")
 
-# Declaration de la fonction qui import le fichier
+
+# Declaration de la fonction qui importe le fichier
 def importFile(nom_fichier):
     df = pd.read_csv(nom_fichier)
     return df
 
+
 # Declaration de la fonction qui lit le fichier
 def afficheFile(file):
     return file.head(file.shape[0])
-#déclaration de la fonction qui détermine les types des données
+
+
+# déclaration de la fonction qui détermine les types des données
 def datatype(file):
-    ty=file.dtypes
+    ty = file.dtypes
     return ty
-#ghjkl
+
+
+# ghjkl
 def Fichier_final(file):
     root = tk.Tk()
     root.withdraw()
     root.wm_attributes('-topmost', 1)
-    path=filedialog.askdirectory(master=root)+'/Fichier.csv'   
+    path = filedialog.askdirectory(master=root) + '/Fichier.csv'
     with open(path, 'w', newline='') as csvfile:
-        fieldnames=[]
-        testhh={}
-        for i in range(0,len(file.columns)):
+        fieldnames = []
+        testhh = {}
+        for i in range(0, len(file.columns)):
             fieldnames.append(file.columns[i])
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
-        for i in range(0,file.shape[0]):
-            for j in range(0,len(file.columns)):
+        for i in range(0, file.shape[0]):
+            for j in range(0, len(file.columns)):
                 testhh[file.columns[j]] = file[file.columns[j]][i]
             writer.writerow(testhh)
-#l'appel du fichier html/css 
-def st_page(calc_html,width=700,height=500):
-    calc_file=codecs.open(calc_html,'r')
-    page=calc_file.read()
-    stc.html(page,width=width,height=height,scrolling=False)
-#MAIN
-file=0
+
+
+# l'appel du fichier html/css
+def st_page(calc_html, width=700, height=500):
+    calc_file = codecs.open(calc_html, 'r')
+    page = calc_file.read()
+    stc.html(page, width=width, height=height, scrolling=False)
+
+
+# MAIN
+file = 0
+
+
 def main():
     global file
-    menu=["Accueil","Information","Filtrage","Diagramme"]
-    choix=st.sidebar.selectbox("Menu",menu)
-    operation=[]
+    menu = ["Accueil", "Information", "Filtrage", "Diagramme"]
+    choix = st.sidebar.selectbox("Menu", menu)
+    operation = []
     t1 = r"t1.PNG"
     t2 = r"python.png"
     t3 = r"t3.jpeg"
     logo = r"icons.png"
-    if choix=="Accueil" :
-        #st.title("Bienvenue sur notre site ")
-        
-        
+    if choix == "Accueil":
+        # st.title("Bienvenue sur notre site ")
+
         st.markdown(f"""<p>
                     <img style="float:left; height: 50px;
             width: 50px;"  src="data:image/png;base64,{base64.b64encode(open(logo, "rb").read()).decode()}"></p>
@@ -69,7 +80,8 @@ def main():
                     <img style="float:right; height: 250px;
             width: 350px;" class="logo-img" src="data:image/png;base64,{base64.b64encode(open(t1, "rb").read()).decode()}">
                     </p><br><br>
-                    <h2 class="sc-1vqnue2-2 DnHbM">Nous simplifions la gestion des fichiers <span style="color : #61C653;">CSV</span></h2>""", unsafe_allow_html=True)
+                    <h2 class="sc-1vqnue2-2 DnHbM">Nous simplifions la gestion des fichiers <span style="color : #61C653;">CSV</span></h2>""",
+                    unsafe_allow_html=True)
 
         st.markdown("""<center><hr size="6" width="50%"  color="#838982"></center>""", unsafe_allow_html=True)
         st.markdown(f"""<p >
@@ -91,82 +103,85 @@ def main():
                             <h2 style="font-family:Verdana, sans-serif;">Gestion des graphes</h2>
                                     <p style="font-family:Andale Mono, monospace;">Construire des graphes (Courbes, Diagramme circulaire ...).</p>
                                     """, unsafe_allow_html=True)
-                            
-    if choix=="Information" :
+
+    if choix == "Information":
         st.markdown(f"""<p>
                     <img style="float:left; height: 50px;
             width: 50px;"  src="data:image/png;base64,{base64.b64encode(open(logo, "rb").read()).decode()}"></p>
                     <h2 style="font-family:Bradley Hand, cursive;"> SanSamSak</h2>""", unsafe_allow_html=True)
-        
-        st.markdown(f"""<h2 style="font-family:Bradley Hand, cursive;font-size:50px"> Information sur les données</h2>""", unsafe_allow_html=True)
-        data = st.file_uploader("Importer un fichier", type=["csv"])  
-        if data is not None : 
+
+        st.markdown(
+            f"""<h2 style="font-family:Bradley Hand, cursive;font-size:50px"> Information sur les données</h2>""",
+            unsafe_allow_html=True)
+        data = st.file_uploader("Importer un fichier", type=["csv"])
+        if data is not None:
             df = importFile(data)
-            file=df
+            file = df
         st.subheader("Affichage de fichier")
         if st.button("Visualiser les données"):
             st.dataframe(afficheFile(file))
-        
+
         st.subheader("Type de données")
         if st.button("Visualiser les types des données"):
             st.write(datatype(file))
-    if choix=="Filtrage" :
+    if choix == "Filtrage":
         st.markdown(f"""<p>
                     <img style="float:left; height: 50px;
             width: 50px;"  src="data:image/png;base64,{base64.b64encode(open(logo, "rb").read()).decode()}"></p>
                     <h2 style="font-family:Bradley Hand, cursive;"> SanSamSak</h2>""", unsafe_allow_html=True)
-        
-        st.markdown(f"""<h2 style="font-family:Bradley Hand, cursive;font-size:50px"> Filtrage des données</h2>""", unsafe_allow_html=True)
+
+        st.markdown(f"""<h2 style="font-family:Bradley Hand, cursive;font-size:50px"> Filtrage des données</h2>""",
+                    unsafe_allow_html=True)
         st.subheader("Filtrage")
-        data = st.file_uploader("Importer un fichier", type=["csv"])  
-       # test = st.uploaded_file.fullpath
-        #st.write(test)
-        if data is not None : 
-            df = importFile(data)
-            file=df
-            #Fichier_final(df)
-        choix=listColo=["Supprimer des colonnes","Rennomer des colonnes","Supression les rebondances","Detecter les valeurs aberrantes"]
-        for i in listColo :
+        data = st.file_uploader("Importer un fichier", type=["csv"])
+        # test = st.uploaded_file.fullpath
+        # st.write(test)
+        if data is not None:
+            file = importFile(data)
+            # Fichier_final(df)
+        choix = listColo = ["Supprimer des colonnes", "Rennomer des colonnes", "Suprimer les redondances",
+                            "Détecter les valeurs aberrantes"]
+        for i in listColo:
             operation.append(st.checkbox(i))
-        
-        #suppression
-        if operation[0]  :
+
+        # suppression
+        if operation[0]:
             st.write("Selectinner des colonnes")
             all_columns_names = file.columns.tolist()
-            selected_columns_names = st.multiselect("Select Columns To Plot",all_columns_names)
-            if operation[0] :
-                for j in selected_columns_names :					
-                    file=file.drop(j, axis=1)
-                    
-        #rennomage
-        
-        text={}
-        if operation[1]  :
-            #df=importFile(aa)
-            st.write("Selectinner des colonnes")
-            listColo=[i for i in file.columns]
-            for i in listColo :
-                text[i]=st.text_input("Rennomer la colonne "+i )
-            if operation[1] :
-                for i in text :
-                    if text[i] :
-                        file.rename(columns={i : text[i]},inplace = True)	
-                        
-        #supression des rebondences
-        if operation[2]  :
-            file.drop_duplicates(keep = 'first', inplace=True)
-            st.success("Les rebondences sont supprimées correctement")
+            selected_columns_names = st.multiselect("Selectionner les colonnes à supprimer", all_columns_names)
+            if operation[0]:
+                for j in selected_columns_names:
+                    file = file.drop(j, axis=1)
+
+        # rennomage
+
+        text = {}
+        if operation[1]:
+            # df=importFile(aa)
+            st.write("Selectionner des colonnes")
+            listColo = [i for i in file.columns]
+            for i in listColo:
+                text[i] = st.text_input("Rennomer la colonne " + i)
+            if operation[1]:
+                for i in text:
+                    if text[i]:
+                        file.rename(columns={i: text[i]}, inplace=True)
+
+        # supression des redondances
+        if operation[2]:
+            file.drop_duplicates(keep='first', inplace=True)
+            st.success("Les redondances sont supprimées correctement")
         # Customizable Plot
-        if operation[3] :
+        if operation[3]:
             all_columns_names = file.columns.tolist()
             type_of_plot = "box"
-            selected_columns_names = st.multiselect("Select Columns To Plot",all_columns_names)
+            selected_columns_names = st.multiselect("Choisir une colonne pour visualiser", all_columns_names)
 
             if st.button("Visualiser les valeurs aberrantes"):
 
                 # Custom Plot
                 if type_of_plot:
-                    cust_plot= df[selected_columns_names].plot(kind=type_of_plot)
+                    cust_plot = file[selected_columns_names].plot(kind=type_of_plot)
                     st.write(cust_plot)
                     st.set_option('deprecation.showPyplotGlobalUse', False)
                     st.pyplot()
@@ -175,113 +190,115 @@ def main():
                 Q3 = file.quantile(0.75)
                 IQR = Q3 - Q1
                 file = file[~((file < (Q1 - 1.5 * IQR)) | (file > (Q3 + 1.5 * IQR))).any(axis=1)]
-                st.success("Les valeurs aberrantes sont supprimées correctement")
-                  
-        if data :
-            st.write("Cliquez pour telechrager votre document apres filtrage")
-            if st.button("telecharger ") :
+                st.success("Les valeurs aberrantes ont été supprimées correctement")
+
+        if data:
+            st.write("Cliquez pour télécharger votre document après le filtrage")
+            if st.button("télécharger "):
                 Fichier_final(file)
-                st.success("Votre fichier est telechrge sous nom 'Fichier.csv'")
-    if choix=="Diagramme" :
+                st.success("Votre fichier est téléchargé sous le nom 'Fichier.csv'")
+    if choix == "Diagramme":
         st.markdown(f"""<p>
                     <img style="float:left; height: 50px;
             width: 50px;"  src="data:image/png;base64,{base64.b64encode(open(logo, "rb").read()).decode()}"></p>
                     <h2 style="font-family:Bradley Hand, cursive;"> SanSamSak</h2>""", unsafe_allow_html=True)
-        
-        #Fonctionnalités générales 
-        st.markdown(f"""<h2 style="font-family:Bradley Hand, cursive;font-size:50px"> Visualisation des graphes</h2>""", unsafe_allow_html=True)
-        options = ["EDA","Plots"]   
-        choice = st.sidebar.selectbox("Selectionner l'Option désirer",options)
-        #Options disponnible dans la rubrique EDA
+
+        # Fonctionnalités générales
+        st.markdown(f"""<h2 style="font-family:Bradley Hand, cursive;font-size:50px"> Visualisation des graphes</h2>""",
+                    unsafe_allow_html=True)
+        options = ["EDA", "Plots"]
+        choice = st.sidebar.selectbox("Selectionner l'option désirée", options)
+        # Options disponnible dans la rubrique EDA
         if choice == 'EDA':
             st.subheader("Visualisation Statistique des données (EDA)")
- 
-            data = st.file_uploader("Importer un fichier", type=["csv"])   #Importation+type de fichier
-            #Lecture du fichier importer 
-            if data is not None: 
+
+            data = st.file_uploader("Importer un fichier", type=["csv"])  # Importation+type de fichier
+            # Lecture du fichier importer
+            if data is not None:
                 df = pd.read_csv(data)
-                
-            #Affiche la dimension du tableau 
+
+                # Affiche la dimension du tableau
                 if st.checkbox("Afficher la Dimension"):
                     st.write(df.shape)
-            
-            #Affiche le noms des colonnes 
+
+                # Affiche le noms des colonnes
                 if st.checkbox("Afficher le nom des Colonnes"):
                     all_columns = df.columns.to_list()
                     st.write(all_columns)
-            #Affiche les colonnes trier selon le choix de l'utilisateur
+                # Affiche les colonnes trier selon le choix de l'utilisateur
                 if st.checkbox("Afficher les Colonnes souhaitées"):
-                    selected_columns = st.multiselect("Choisir les Colonnes",all_columns)
+                    selected_columns = st.multiselect("Choisir les Colonnes", all_columns)
                     new_df = df[selected_columns]
                     st.dataframe(new_df)
 
-            #Affiche un résumé statistique du fichier 
+                # Affiche un résumé statistique du fichier
                 if st.checkbox("Summary"):
                     st.write(df.describe())
- 
-            #Affichages des HEAT MAPS : Matplotlib & Seaborn  
+
+                # Affichages des HEAT MAPS : Matplotlib & Seaborn
                 if st.checkbox("Carte Thermique: Heat Maps (Matplotlib)"):
                     plt.matshow(df.corr())
+                    st.set_option('deprecation.showPyplotGlobalUse', False)
                     st.pyplot()
-            
+
+
                 if st.checkbox("Carte Thermique : Heat Maps (Seaborn)"):
-                    st.write(sns.heatmap(df.corr(),annot=True))
+                    st.write(sns.heatmap(df.corr(), annot=True))
+                    st.set_option('deprecation.showPyplotGlobalUse', False)
                     st.pyplot()
- 
-            #Affichage du diagramme circulaire (Pie Chart)
+
+                # Affichage du diagramme circulaire (Pie Chart)
                 if st.checkbox("Diagramme Circulaire (Pie Chart)"):
                     all_columns = df.columns.to_list()
-                    column_to_plot = st.selectbox("Choisir 1 colonne ",all_columns)
+                    column_to_plot = st.selectbox("Choisir 1 colonne ", all_columns)
                     pie_plot = df[column_to_plot].value_counts().plot.pie(autopct="%1.1f%%")
                     st.write(pie_plot)
+                    st.set_option('deprecation.showPyplotGlobalUse', False)
                     st.pyplot()
- 
+
         elif choice == 'Plots':
             st.subheader("Visualisation des Plots ( Graphes)")
-            data = st.file_uploader("Importer un fichier", type=["csv", "txt", "xlsx"])
-            #Lecture du fichier importer
+            data = st.file_uploader("Importer un fichier", type=["csv"])
+            # Lecture du fichier importer
             if data is not None:
                 df = pd.read_csv(data)
                 st.dataframe(df.head())
- 
- 
+
                 if st.checkbox("Show Value Counts"):
-                    st.write(df.iloc[:,-1].value_counts().plot(kind='bar'))
+                    st.write(df.iloc[:, -1].value_counts().plot(kind='bar'))
+                    st.set_option('deprecation.showPyplotGlobalUse', False)
                     st.pyplot()
-            
+
                 # Customizable Plot
- 
+
                 all_columns_names = df.columns.tolist()
-                type_of_plot = st.selectbox("Choisir un type de graphe",["Surfacique","À barre","Line", "hist"])
-                selected_columns_names = st.multiselect("Selectionner les colonnes à afficher",all_columns_names)
- 
+                type_of_plot = st.selectbox("Choisir un type de graphe", ["Surfacique", "À barre", "Line", "hist"])
+                selected_columns_names = st.multiselect("Selectionner les colonnes à afficher", all_columns_names)
+
                 if st.button("Visualisation"):
-                    #Affichage des plots selon les colonnes selectionner
-                    st.success("Generating Customizable Plot of {} for {}".format(type_of_plot,selected_columns_names))
- 
+                    # Affichage des plots selon les colonnes selectionner
+
                     # Plot By Streamlit
                     if type_of_plot == 'Surfacique':
                         cust_data = df[selected_columns_names]
                         st.area_chart(cust_data)
- 
+
                     elif type_of_plot == 'À barre':
                         cust_data = df[selected_columns_names]
                         st.bar_chart(cust_data)
- 
+
                     elif type_of_plot == 'Line':
                         cust_data = df[selected_columns_names]
                         st.line_chart(cust_data)
- 
-                    
+
+
                     elif type_of_plot:
-                        cust_plot= df[selected_columns_names].plot(kind=type_of_plot)
+                        cust_plot = df[selected_columns_names].plot(kind=type_of_plot)
                         st.write(cust_plot)
+                        st.set_option('deprecation.showPyplotGlobalUse', False)
                         st.pyplot()
 
-if __name__=='__main__' :
+
+if __name__ == '__main__':
     main()
 
-        
-
-        
-            
