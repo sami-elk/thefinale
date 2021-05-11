@@ -10,8 +10,7 @@ import base64
 import codecs
 import streamlit.components.v1 as stc
 import os
-disp = os.environ['DISPLAY']
-os.environ['DISPLAY'] = 'unix' + disp
+
 
 matplotlib.use("Agg")
 
@@ -35,6 +34,8 @@ def datatype(file):
 
 # ghjkl
 def Fichier_final(file):
+    disp = os.environ['DISPLAY']
+    os.environ['DISPLAY'] = 'unix' + disp
     root = tk.Tk()
     root.withdraw()
     root.wm_attributes('-topmost', 1)
