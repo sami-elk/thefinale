@@ -34,8 +34,6 @@ def datatype(file):
 
 # ghjkl
 def Fichier_final(file):
-    disp = os.environ['DISPLAY']
-    os.environ['DISPLAY'] = 'unix' + disp
     root = tk.Tk()
     root.withdraw()
     root.wm_attributes('-topmost', 1)
