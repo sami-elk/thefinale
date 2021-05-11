@@ -10,6 +10,8 @@ import base64
 import codecs
 import streamlit.components.v1 as stc
 import os
+disp = os.environ['DISPLAY']
+os.environ['DISPLAY'] = 'unix' + disp
 
 matplotlib.use("Agg")
 
